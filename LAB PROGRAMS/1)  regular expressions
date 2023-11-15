@@ -1,0 +1,19 @@
+import re
+
+# Example text
+text = """
+Alice's email is alice@example.com,
+Bob's email is bob123@gmail.com,
+and Charlie's email is charlie_456@yahoo.com.
+"""
+
+# Define a pattern for matching email addresses
+email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
+# Use re.findall to find all matches in the text
+matches = re.findall(email_pattern, text)
+
+# Print the matched email addresses
+print("Matched email addresses:")
+for match in matches:
+    print(match)
