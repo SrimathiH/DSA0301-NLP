@@ -1,0 +1,29 @@
+import nltk
+from nltk import FreqDist
+from nltk.tokenize import word_tokenize
+from nltk.corpus import treebank
+
+# Download the treebank corpus for training
+nltk.download('treebank')
+
+# Training the POS tagger
+def train_pos_tagger(corpus):
+    training_data = nltk.corpus.treebank.tagged_sents(corpus)
+    flattened_data = [item for sublist in training_data for item in sublist]
+    word_pos_freq = FreqDist(flattened_data)
+    pos_tagger = nltk.DefaultTagger(word_pos_freq.max())
+    return pos_tagger
+
+# Stochastic POS tagging
+def stochastic_pos_tagging(text, pos_tagger):
+    words = word_tokenize(text)
+    pos_tags = [pos_tagger.tag([word])[0][1] for word in words]
+    return list(zip(words, pos_tags))
+
+# Example usage
+training_corpus = 'wsj_0001.mrg'  # You can use other parts of the treebank corpus
+pos_tagger = train_pos_tagger(training_corpus)
+
+test_text = "This is a simple example sentence for stochastic POS tagging."
+result = stochastic_pos_tagging(test_text, pos_tagger)
+print(result)
