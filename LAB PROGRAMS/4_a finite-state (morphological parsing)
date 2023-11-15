@@ -1,0 +1,37 @@
+class PluralStateMachine:
+    def __init__(self):
+        self.transitions = {
+            ('start', 'consonant'): 's',
+            ('start', 'vowel'): 's',
+            ('consonant', 'vowel'): 'es',
+            ('vowel', 'consonant'): 's',
+            ('consonant', 'consonant'): 'es',
+            ('vowel', 'vowel'): 's',
+        }
+        self.state = 'start'
+
+    def pluralize(self, word):
+        result = list(word)
+        for i in range(len(word) - 1, 0, -1):
+            current_char = word[i]
+            previous_char = word[i - 1]
+
+            current_state = 'vowel' if current_char.lower() in 'aeiou' else 'consonant'
+            previous_state = 'vowel' if previous_char.lower() in 'aeiou' else 'consonant'
+
+            rule = self.transitions.get((previous_state, current_state))
+            if rule:
+                if rule == 's':
+                    result.insert(i, 's')
+                elif rule == 'es':
+                    result.insert(i, 'e')
+                    result.insert(i + 1, 's')
+
+        return ''.join(result)
+
+
+# Example usage:
+noun = "cat"
+pluralizer = PluralStateMachine()
+plural_form = pluralizer.pluralize(noun)
+print(f"The plural form of {noun} is {plural_form}")
