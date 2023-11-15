@@ -1,0 +1,30 @@
+import re
+
+def rule_based_pos_tagging(text):
+    tagged_words = []
+
+    # Define POS tagging rules using regular expressions
+    rules = [
+        (r'\b(?:is|am|are|was|were)\b', 'VB'),  # Verbs
+        (r'\b(?:the|a|an)\b', 'DT'),             # Determiners
+        (r'\b(?:dog|cat|bird)\b', 'NN'),         # Nouns
+        (r'\b(?:runs?|jumps?|flies)\b', 'VB'),   # More verbs
+        (r'\b(?:quickly|slowly)\b', 'RB'),       # Adverbs
+        (r'\b(?:brown|black|white)\b', 'JJ'),   # Adjectives
+    ]
+
+    # Apply rules to tag words
+    for word in text.split():
+        for pattern, pos_tag in rules:
+            if re.fullmatch(pattern, word, re.IGNORECASE):
+                tagged_words.append((word, pos_tag))
+                break
+        else:
+            tagged_words.append((word, 'NN'))  # Default to noun if no rule matches
+
+    return tagged_words
+
+# Example usage
+test_text = "The quick brown fox jumps over the lazy dog."
+result = rule_based_pos_tagging(test_text)
+print(result)
