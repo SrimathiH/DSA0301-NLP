@@ -1,0 +1,34 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+
+# Sample documents
+documents = [
+    "This is the first document.",
+    "This document is the second document.",
+    "And this is the third one.",
+    "Is this the first document?",
+]
+
+# User query
+query = "This is the second document."
+
+# Create a TF-IDF vectorizer
+vectorizer = TfidfVectorizer(stop_words='english')
+
+# Calculate TF-IDF matrix for documents
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+# Calculate TF-IDF vector for the user query
+query_vector = vectorizer.transform([query])
+
+# Calculate cosine similarities between the query and documents
+cosine_similarities = linear_kernel(query_vector, tfidf_matrix).flatten()
+
+# Rank documents based on cosine similarities
+document_ranking = sorted(enumerate(cosine_similarities), key=lambda x: x[1], reverse=True)
+
+# Print the ranked documents
+print("Ranked Documents:")
+for index, similarity in document_ranking:
+    print(f"Document {index + 1}: Similarity = {similarity:.4f}")
+    print(f"   '{documents[index]}'\n")
