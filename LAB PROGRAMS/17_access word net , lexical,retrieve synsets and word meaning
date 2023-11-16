@@ -1,0 +1,32 @@
+import nltk
+
+nltk.download('wordnet')
+----------------
+from nltk.corpus import wordnet
+
+def explore_word(word):
+    synsets = wordnet.synsets(word)
+
+    if not synsets:
+        print(f"No synsets found for the word '{word}'.")
+        return
+
+    print(f"Synsets for the word '{word}':")
+    for synset in synsets:
+        print(f"\nSynset: {synset.name()}")
+        print(f"POS (Part of Speech): {synset.pos()}")
+        print(f"Definition: {synset.definition()}")
+
+        print("\nHypernyms (more general terms):")
+        for hypernym in synset.hypernyms():
+            print(f"{hypernym.name()}: {hypernym.definition()}")
+
+        print("\nHyponyms (more specific terms):")
+        for hyponym in synset.hyponyms():
+            print(f"{hyponym.name()}: {hyponym.definition()}")
+
+        print("\n--------------------------------------")
+
+if __name__ == "__main__":
+    word_to_explore = input("Enter a word to explore: ")
+    explore_word(word_to_explore)
