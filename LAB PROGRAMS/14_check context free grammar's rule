@@ -1,0 +1,38 @@
+import nltk
+
+# Define a context-free grammar for subject-verb agreement
+grammar = nltk.CFG.fromstring("""
+    S -> NP_SG VP_SG
+    S -> NP_PL VP_PL
+    NP_SG -> Det_SG N_SG
+    NP_PL -> Det_PL N_PL
+    VP_SG -> V_SG
+    VP_PL -> V_PL
+    Det_SG -> 'a' | 'the'
+    Det_PL -> 'some' | 'the'
+    N_SG -> 'cat' | 'dog'
+    N_PL -> 'cats' | 'dogs'
+    V_SG -> 'chases'
+    V_PL -> 'chase'
+""")
+
+# Define a function to check agreement
+def check_agreement(sentence):
+    tokens = nltk.word_tokenize(sentence)
+    parser = nltk.ChartParser(grammar)
+
+    for tree in parser.parse(tokens):
+        tree.pretty_print()
+        return True  # The sentence is valid according to the grammar
+
+    return False  # The sentence does not agree according to the grammar
+
+# Example usage:
+sentence_1 = "the cat chases a dog"
+sentence_2 = "the cats chase a dog"
+
+result_1 = check_agreement(sentence_1)
+result_2 = check_agreement(sentence_2)
+
+print(f"Result for '{sentence_1}': {result_1}")
+print(f"Result for '{sentence_2}': {result_2}")
