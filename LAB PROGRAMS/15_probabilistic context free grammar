@@ -1,0 +1,34 @@
+import nltk
+from nltk import PCFG
+from nltk import InsideChartParser
+
+# Define a probabilistic context-free grammar
+pcfg_grammar = PCFG.fromstring("""
+    S -> NP VP [1.0]
+    NP -> Det N [0.5] | NP PP [0.4] | 'John' [0.1]
+    VP -> V NP [0.7] | VP PP [0.3]
+    PP -> P NP [1.0]
+    Det -> 'the' [0.8] | 'a' [0.2]
+    N -> 'dog' [0.4] | 'cat' [0.4] | 'ball' [0.2]
+    V -> 'chased' [0.6] | 'ate' [0.4]
+    P -> 'with' [0.4] | 'in' [0.3] | 'on' [0.3]
+""")
+
+# Create a PCFG parser
+parser = InsideChartParser(pcfg_grammar)
+
+# Define a sentence to parse
+sentence = "the dog chased the cat"
+
+# Tokenize the sentence
+tokens = nltk.word_tokenize(sentence)
+
+# Parse the sentence
+for tree in parser.parse(tokens):
+    tree.pretty_print()
+
+# Retrieve the most likely parse tree
+most_likely_tree = parser.parse(tokens).__next__()
+
+# Print the most likely parse tree
+most_likely_tree.pretty_print()
