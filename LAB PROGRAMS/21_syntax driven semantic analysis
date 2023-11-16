@@ -1,0 +1,36 @@
+import spacy
+
+def extract_noun_phrases(sentence):
+    # Load SpaCy English language model
+    nlp = spacy.load("en_core_web_sm")
+
+    # Process the input sentence
+    doc = nlp(sentence)
+
+    # Extract noun phrases and their meanings
+    noun_phrases = []
+    for chunk in doc.noun_chunks:
+        noun_phrases.append({
+            'text': chunk.text,
+            'root': chunk.root.text,
+            'root_pos': chunk.root.pos_,
+            'root_dep': chunk.root.dep_,
+        })
+
+    return noun_phrases
+
+if __name__ == "__main__":
+    # Example sentence
+    input_sentence = "The quick brown fox jumped over the lazy dog."
+
+    # Perform syntax-driven semantic analysis
+    result = extract_noun_phrases(input_sentence)
+
+    # Print the results
+    print("Noun Phrases and Their Meanings:")
+    for phrase in result:
+        print(f"Text: {phrase['text']}")
+        print(f"Root: {phrase['root']}")
+        print(f"Root POS: {phrase['root_pos']}")
+        print(f"Root Dependency: {phrase['root_dep']}")
+        print("------------------------------")
