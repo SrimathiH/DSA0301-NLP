@@ -1,0 +1,45 @@
+from nltk.corpus import wordnet
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+def lesk_algorithm(word, sentence):
+    best_sense = None
+    max_overlap = 0
+
+    # Tokenize and remove stopwords from the sentence
+    context = set(word_tokenize(sentence.lower()))
+    stop_words = set(stopwords.words('english'))
+    context = context - stop_words
+
+    # Iterate over the word senses in WordNet
+    for sense in wordnet.synsets(word):
+        # Get the definition and example of the sense
+        signature = set(word_tokenize(sense.definition().lower()))
+        for example in sense.examples():
+            signature.update(word_tokenize(example.lower()))
+
+        # Calculate the overlap between the context and the signature
+        overlap = len(context.intersection(signature))
+
+        # Update the best sense if the overlap is greater
+        if overlap > max_overlap:
+            max_overlap = overlap
+            best_sense = sense
+
+    return best_sense
+
+if __name__ == "__main__":
+    # Example usage
+    target_word = "bank"
+    example_sentence = "He went to the bank to deposit his money."
+
+    # Perform word sense disambiguation
+    result_sense = lesk_algorithm(target_word, example_sentence)
+
+    # Print the result
+    if result_sense:
+        print(f"Word: {target_word}")
+        print(f"Best Sense: {result_sense.name()}")
+        print(f"Definition: {result_sense.definition()}")
+    else:
+        print(f"No suitable sense found for the word '{target_word}'.")
